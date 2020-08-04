@@ -1,5 +1,6 @@
+import { locations } from './../weather-details/currentWeatherMock';
 import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs';
+import { Observable, BehaviorSubject, of } from 'rxjs';
 import { HttpClient, HttpParams } from '@angular/common/http';
 
 @Injectable({
@@ -9,12 +10,18 @@ export class WeatherService {
 
   constructor(private http: HttpClient) { }
 
-  apiKey = "PrYdYR0XAGaPO3cj88PVwuP5mJPApHGc";
-  baseUrl = "http://dataservice.accuweather.com"
-  locationAutoCompletePath = "autocomplete"
+  apiKey = 'sdf';
+  //apiKey = 'PrYdYR0XAGaPO3cj88PVwuP5mJPApHGc';
+  baseUrl = 'http://dataservice.accuweather.com'
+  locationAutoCompletePath = 'autocomplete';
+
+  private favoriteLocations: any[] = this.getFavoritesFromLocalStorage();
+  private favoriteLocations$: BehaviorSubject<any> = new BehaviorSubject<any>(this.favoriteLocations);
+  private currentLocation = this.getCurrentLocationFromLocalStorage();
+  private currentLocation$: BehaviorSubject<any> = new BehaviorSubject<any>(this.currentLocation);
 
   getLocationsByAutoComplete(searhcString: string): Observable<any> {
-    const locationsUrl = "/locations/v1/cities/"
+    const locationsUrl = '/locations/v1/cities/';
     const params = new HttpParams()
     .set('apiKey', this.apiKey)
     .set('language', 'EN-US')
@@ -25,22 +32,81 @@ export class WeatherService {
   }
 
   getCurrentWeather(locationKey: any): Observable<any> {
-    const currentWeatherForecastUrl = "/currentconditions/v1/"
+    const currentWeatherForecastUrl = '/currentconditions/v1/';
     const params = new HttpParams()
     .set('apiKey', this.apiKey)
     .set('language', 'EN-US')
     .set('details', 'false');
 
-    return this.http.get<any>(this.baseUrl + currentWeatherForecastUrl + locationKey, {params});
+    //return this.http.get<any>(this.baseUrl + currentWeatherForecastUrl + locationKey, {params});
+    return of({
+      "LocalObservationDateTime": "2020-08-02T17:51:00+01:00",
+      "EpochTime": 1596387060,
+      "WeatherText": "Mostly cloudy",
+      "WeatherIcon": 6,
+      "HasPrecipitation": false,
+      "PrecipitationType": null,
+      "IsDayTime": true,
+      "Temperature": {
+        "Metric": {
+          "Value": 23.6,
+          "Unit": "C",
+          "UnitType": 17
+        },
+        "Imperial": {
+          "Value": 74,
+          "Unit": "F",
+          "UnitType": 18
+        }
+      },
+      "MobileLink": "http://m.accuweather.com/en/gb/london/ec4a-2/current-weather/328328?lang=en-us",
+      "Link": "http://www.accuweather.com/en/gb/london/ec4a-2/current-weather/328328?lang=en-us"
+    });
   }
 
   getFiveDaysForecast(locationKey: any): Observable<any> {
-    const fiveDaysForecastUrl = "/forecasts/v1/daily/5day/"
+    const fiveDaysForecastUrl = '/forecasts/v1/daily/5day/';
     const params = new HttpParams()
     .set('apiKey', this.apiKey)
     .set('language', 'EN-US')
+    .set('metric', 'true')
     .set('details', 'false');
 
     return this.http.get<any>(this.baseUrl + fiveDaysForecastUrl + locationKey, {params});
+  }
+
+  addToFavorites(location: any){
+    this.favoriteLocations = this.getFavoritesFromLocalStorage();
+    this.favoriteLocations.push(location);
+    localStorage.setItem('favorites', JSON.stringify(this.favoriteLocations));
+    this.favoriteLocations$.next(this.favoriteLocations);
+  }
+
+  removeFromFavorites(location: any) {
+    this.favoriteLocations = this.getFavoritesFromLocalStorage();
+    const index = this.favoriteLocations.indexOf((savedLocation) => savedLocation.LocalizedName === location.LocalizedName);
+    this.favoriteLocations.splice(index, 1);
+    localStorage.setItem('favorites', JSON.stringify(this.favoriteLocations));
+    this.favoriteLocations$.next(this.favoriteLocations);
+  }
+
+  getCurrenLocation() {
+    return this.currentLocation$.asObservable();
+  }
+
+  setCurrentLocation(location: any){
+    this.currentLocation$.next(location);
+  }
+
+  getFavorites(): Observable<any>{
+    return this.favoriteLocations$.asObservable();
+  }
+
+  private getFavoritesFromLocalStorage(): any[]{
+    return JSON.parse(localStorage.getItem('favorites')) || [];
+  }
+
+  private getCurrentLocationFromLocalStorage(): any {
+    return JSON.parse(localStorage.getItem('currentLocation')) || null;
   }
 }

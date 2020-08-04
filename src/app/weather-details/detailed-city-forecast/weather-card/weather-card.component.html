@@ -1,1 +1,14 @@
-<p>weather-card works!</p>
+<div class="weather-card">
+  <div>
+    {{dayForecast.Date | date: 'EEEE'}}
+  </div>
+  <div class="day">
+    <img class="weather-icon" mat-card-image src="assets/icons/{{dayForecast.Day.Icon}}-s.png" alt="">
+  </div>
+  <div class="night">
+    <img class="weather-icon" mat-card-image src="assets/icons/{{dayForecast.Night.Icon}}-s.png" alt="">
+  </div>
+  <p>
+    {{dayForecast.Temperature.Minimum.Value}} {{dayForecast.Temperature.Minimum.Unit}} - {{dayForecast.Temperature.Maximum.Value}} {{dayForecast.Temperature.Maximum.Unit}}
+  </p>
+</div>

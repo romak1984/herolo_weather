@@ -1,1 +1,5 @@
-<p>favorites works!</p>
+<div class="favorites-container">
+  <app-favorite-card *ngFor="let favoriteLoc of (favoritesLoc$ | async)"
+   [favoriteLoc]="favoriteLoc"
+   (selected="favoriteSelected($event)"></app-favorite-card>
+</div>

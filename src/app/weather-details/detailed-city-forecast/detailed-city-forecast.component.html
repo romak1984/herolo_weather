@@ -1,1 +1,28 @@
-<p>detailed-city-forecast works!</p>
+<div class="detailed-city-forecast">
+  <ng-container *ngIf="currentWeather$ | async as currentWeather">
+    <div class="icon-city-temp">
+      <img src="assets/icons/{{currentWeather[0].WeatherIcon}}-s.png" alt="">
+
+      <div class="temperature">
+        {{currentWeather[0].Temperature.Metric.Value}} {{currentWeather[0].Temperature.Metric.Unit}}
+      </div>
+    </div>
+
+    <div class="favorite">
+      <ng-container *ngIf="{isFavorite: isCurrentLocationFavorite$ | async} as isFaveObj">
+        <button *ngIf="!isFaveObj.isFavorite" (click)="addToFavorites()">Add to favorites</button>
+        <button *ngIf="isFaveObj.isFavorite" (click)="removeFromFavorites()">Remove from favorites</button>
+      </ng-container>
+
+    </div>
+
+    <div class="description">
+        {{currentWeather[0].WeatherText}}
+    </div>
+
+    <div class="forecast">
+      <app-weather-card *ngFor="let dayForecast of (fiveDaysForecast$ | async).DailyForecasts;" [dayForecast]="dayForecast"></app-weather-card>
+    </div>
+  </ng-container>
+
+</div>

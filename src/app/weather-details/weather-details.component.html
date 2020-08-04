@@ -1,1 +1,11 @@
-<p>weather-details works!</p>
+<!-- <app-city-search></app-city-search> -->
+<app-detailed-city-forecast [currentWeatherObs]="localizedWeather$"
+ [fiveDaysForecastObs]="fiveDaysForecast$"
+  [location]="selectedLocation" currentLocation
+  [favoritesObs]="favorites$"
+  (add)="addToFavorites($event)"
+  (remove)="removeFromFavorites($event)">
+</app-detailed-city-forecast>
+
+<!-- to add instead of location -->
+<!-- currentLocation$ -->
