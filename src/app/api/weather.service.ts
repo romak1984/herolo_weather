@@ -10,10 +10,8 @@ export class WeatherService {
 
   constructor(private http: HttpClient) { }
 
-  apiKey = 'sdf';
-  //apiKey = 'PrYdYR0XAGaPO3cj88PVwuP5mJPApHGc';
-  baseUrl = 'http://dataservice.accuweather.com'
-  locationAutoCompletePath = 'autocomplete';
+  apiKey = 'PrYdYR0XAGaPO3cj88PVwuP5mJPApHGc';
+  baseUrl = 'http://dataservice.accuweather.com';
 
   private favoriteLocations: any[] = this.getFavoritesFromLocalStorage();
   private favoriteLocations$: BehaviorSubject<any> = new BehaviorSubject<any>(this.favoriteLocations);
@@ -21,9 +19,9 @@ export class WeatherService {
   private currentLocation$: BehaviorSubject<any> = new BehaviorSubject<any>(this.currentLocation);
 
   getLocationsByAutoComplete(searhcString: string): Observable<any> {
-    const locationsUrl = '/locations/v1/cities/';
+    const locationsUrl = '/locations/v1/cities/autocomplete';
     const params = new HttpParams()
-    .set('apiKey', this.apiKey)
+    .set('apikey', this.apiKey)
     .set('language', 'EN-US')
     .set('details', 'false')
     .set('q', searhcString);
@@ -34,40 +32,40 @@ export class WeatherService {
   getCurrentWeather(locationKey: any): Observable<any> {
     const currentWeatherForecastUrl = '/currentconditions/v1/';
     const params = new HttpParams()
-    .set('apiKey', this.apiKey)
+    .set('apikey', this.apiKey)
     .set('language', 'EN-US')
     .set('details', 'false');
 
-    //return this.http.get<any>(this.baseUrl + currentWeatherForecastUrl + locationKey, {params});
-    return of({
-      "LocalObservationDateTime": "2020-08-02T17:51:00+01:00",
-      "EpochTime": 1596387060,
-      "WeatherText": "Mostly cloudy",
-      "WeatherIcon": 6,
-      "HasPrecipitation": false,
-      "PrecipitationType": null,
-      "IsDayTime": true,
-      "Temperature": {
-        "Metric": {
-          "Value": 23.6,
-          "Unit": "C",
-          "UnitType": 17
-        },
-        "Imperial": {
-          "Value": 74,
-          "Unit": "F",
-          "UnitType": 18
-        }
-      },
-      "MobileLink": "http://m.accuweather.com/en/gb/london/ec4a-2/current-weather/328328?lang=en-us",
-      "Link": "http://www.accuweather.com/en/gb/london/ec4a-2/current-weather/328328?lang=en-us"
-    });
+    return this.http.get<any>(this.baseUrl + currentWeatherForecastUrl + locationKey, {params});
+    // return of({
+    //   "LocalObservationDateTime": "2020-08-02T17:51:00+01:00",
+    //   "EpochTime": 1596387060,
+    //   "WeatherText": "Mostly cloudy",
+    //   "WeatherIcon": 6,
+    //   "HasPrecipitation": false,
+    //   "PrecipitationType": null,
+    //   "IsDayTime": true,
+    //   "Temperature": {
+    //     "Metric": {
+    //       "Value": 23.6,
+    //       "Unit": "C",
+    //       "UnitType": 17
+    //     },
+    //     "Imperial": {
+    //       "Value": 74,
+    //       "Unit": "F",
+    //       "UnitType": 18
+    //     }
+    //   },
+    //   "MobileLink": "http://m.accuweather.com/en/gb/london/ec4a-2/current-weather/328328?lang=en-us",
+    //   "Link": "http://www.accuweather.com/en/gb/london/ec4a-2/current-weather/328328?lang=en-us"
+    // });
   }
 
   getFiveDaysForecast(locationKey: any): Observable<any> {
     const fiveDaysForecastUrl = '/forecasts/v1/daily/5day/';
     const params = new HttpParams()
-    .set('apiKey', this.apiKey)
+    .set('apikey', this.apiKey)
     .set('language', 'EN-US')
     .set('metric', 'true')
     .set('details', 'false');
@@ -95,6 +93,7 @@ export class WeatherService {
   }
 
   setCurrentLocation(location: any){
+    localStorage.setItem('currentLocation', JSON.stringify(location));
     this.currentLocation$.next(location);
   }
 

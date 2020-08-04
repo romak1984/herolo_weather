@@ -1,6 +1,7 @@
+import { WeatherService } from './../../api/weather.service';
 import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import { Observable } from 'rxjs';
-import { filter, map, tap } from 'rxjs/operators';
+import { map, tap } from 'rxjs/operators';
 
 
 @Component({
@@ -10,20 +11,23 @@ import { filter, map, tap } from 'rxjs/operators';
 })
 export class DetailedCityForecastComponent implements OnInit {
 
-  @Input('currentWeatherObs') currentWeather$: Observable<any>;
-  @Input('fiveDaysForecastObs') fiveDaysForecast$: Observable<any>;
-  @Input('favoritesObs') favoritesObs$: Observable<any>;
-  @Input() location: any;
 
+  @Input() location: any;
   @Output() remove: EventEmitter<string> = new EventEmitter<string>();
   @Output() add: EventEmitter<string> = new EventEmitter<string>();
 
+  currentWeather$: Observable<any>;
+  fiveDaysForecast$: Observable<any>;
+  favorites$: Observable<any>;
   isCurrentLocationFavorite$: Observable<boolean>;
 
-  constructor() { }
+  constructor(private weatherService: WeatherService) { }
 
   ngOnInit() {
-    this.isCurrentLocationFavorite$ = this.favoritesObs$.pipe(
+    this.currentWeather$ = this.weatherService.getCurrentWeather(this.location.Key);
+    this.fiveDaysForecast$ = this.weatherService.getFiveDaysForecast(this.location.Key);
+    this.favorites$ = this.weatherService.getFavorites();
+    this.isCurrentLocationFavorite$ = this.favorites$.pipe(
       tap(value => console.log(value)),
       map((locations: any[]) => locations.findIndex((location: any) => location.Key === this.location.Key) !== -1)
       );

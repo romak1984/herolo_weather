@@ -1,11 +1,9 @@
-<!-- <app-city-search></app-city-search> -->
-<app-detailed-city-forecast [currentWeatherObs]="localizedWeather$"
- [fiveDaysForecastObs]="fiveDaysForecast$"
-  [location]="selectedLocation" currentLocation
-  [favoritesObs]="favorites$"
+<app-city-search (search)="locationSelected($event)"></app-city-search>
+<ng-container *ngIf="currentLocation$ | async as currentLocation">
+  <app-detailed-city-forecast [location]="currentLocation"
   (add)="addToFavorites($event)"
   (remove)="removeFromFavorites($event)">
 </app-detailed-city-forecast>
+</ng-container>
 
-<!-- to add instead of location -->
-<!-- currentLocation$ -->
+
