@@ -11,7 +11,7 @@ export class WeatherService {
   constructor(private http: HttpClient) { }
 
   apiKey = 'PrYdYR0XAGaPO3cj88PVwuP5mJPApHGc';
-  baseUrl = 'http://dataservice.accuweather.com';
+  baseUrl = 'https://dataservice.accuweather.com';
 
   private favoriteLocations: any[] = this.getFavoritesFromLocalStorage();
   private favoriteLocations$: BehaviorSubject<any> = new BehaviorSubject<any>(this.favoriteLocations);
