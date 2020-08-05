@@ -2,6 +2,7 @@ import { locations } from './../weather-details/currentWeatherMock';
 import { Injectable } from '@angular/core';
 import { Observable, BehaviorSubject, of } from 'rxjs';
 import { HttpClient, HttpParams } from '@angular/common/http';
+import { catchError } from 'rxjs/operators';
 
 @Injectable({
   providedIn: 'root'
@@ -26,7 +27,9 @@ export class WeatherService {
     .set('details', 'false')
     .set('q', searhcString);
 
-    return this.http.get<any>(this.baseUrl + locationsUrl, {params});
+    return this.http.get<any>(this.baseUrl + locationsUrl, {params}).pipe(
+      catchError(err => { alert('error occured: ' + JSON.stringify(err.error)); return of(null); })
+      );
   }
 
   getCurrentWeather(locationKey: any): Observable<any> {
@@ -36,7 +39,9 @@ export class WeatherService {
     .set('language', 'EN-US')
     .set('details', 'false');
 
-    return this.http.get<any>(this.baseUrl + currentWeatherForecastUrl + locationKey, {params});
+    return this.http.get<any>(this.baseUrl + currentWeatherForecastUrl + locationKey, {params}).pipe(
+      catchError(err => { alert('error occured: ' + JSON.stringify(err.error)); return of(null); })
+      );
   }
 
   getFiveDaysForecast(locationKey: any): Observable<any> {
@@ -47,7 +52,9 @@ export class WeatherService {
     .set('metric', 'true')
     .set('details', 'false');
 
-    return this.http.get<any>(this.baseUrl + fiveDaysForecastUrl + locationKey, {params});
+    return this.http.get<any>(this.baseUrl + fiveDaysForecastUrl + locationKey, {params}).pipe(
+      catchError(err => { alert('error occured: ' + JSON.stringify(err.error)); return of(null); })
+      );
   }
 
   addToFavorites(location: any){
