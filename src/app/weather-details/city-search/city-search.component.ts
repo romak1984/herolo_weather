@@ -1,31 +1,42 @@
 import { WeatherService } from './../../api/weather.service';
-import { Component, OnInit, EventEmitter, Output } from '@angular/core';
+import { Component, OnInit, EventEmitter, Output, OnDestroy } from '@angular/core';
 import { FormControl } from '@angular/forms';
-import { Observable } from 'rxjs';
-import { debounceTime, distinctUntilChanged, switchMap, filter } from 'rxjs/operators';
+import { Observable, Subscription } from 'rxjs';
+import { debounceTime, distinctUntilChanged, switchMap, filter, tap, take } from 'rxjs/operators';
 
 @Component({
   selector: 'app-city-search',
   templateUrl: './city-search.component.html',
   styleUrls: ['./city-search.component.scss']
 })
-export class CitySearchComponent implements OnInit {
+export class CitySearchComponent implements OnInit, OnDestroy {
 
-  searchControl = new FormControl('');
+  searchControl: FormControl = new FormControl('');
+  subsciption$: Subscription;
   filteredOptions: Observable<any[]>;
+  currentLocation$: Observable<any>;
   @Output() search: EventEmitter<any> = new EventEmitter<any>();
 
   constructor(private weatherService: WeatherService) { }
 
   ngOnInit() {
+    this.subsciption$ = this.weatherService.getCurrenLocation().pipe(
+      take(1)).subscribe(value => this.searchControl.setValue(value)
+      );
     this.filteredOptions = this.searchControl.valueChanges
       .pipe(
         filter(value => value !== ''),
         debounceTime(400),
+        filter(value => typeof value === 'string'),
         distinctUntilChanged(),
         switchMap((search: string) => {
           return this.weatherService.getLocationsByAutoComplete(search);
         }));
+  }
+
+  ngOnDestroy(): void {
+    this.subsciption$.unsubscribe();
+
   }
 
   displayFn(location: any): string {
@@ -33,6 +44,8 @@ export class CitySearchComponent implements OnInit {
   }
 
   onSearch(location: any){
-    this.search.emit(location);
+    if(typeof location !== 'string'){
+      this.search.emit(location);
+    }
   }
 }

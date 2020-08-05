@@ -1,6 +1,7 @@
 import { Observable } from 'rxjs';
 import { WeatherService } from './../../api/weather.service';
 import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
+import { tap } from 'rxjs/operators';
 
 @Component({
   selector: 'app-favorite-card',
@@ -17,7 +18,7 @@ export class FavoriteCardComponent implements OnInit {
   constructor(private weatherService: WeatherService) { }
 
   ngOnInit() {
-    this.currentWeather$ = this.weatherService.getCurrentWeather(this.favoriteLoc.Key);
+    this.currentWeather$ = this.weatherService.getCurrentWeather(this.favoriteLoc.Key).pipe(tap(val => console.log(val)));
   }
 
   selectFavorite(){

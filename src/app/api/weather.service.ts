@@ -37,29 +37,6 @@ export class WeatherService {
     .set('details', 'false');
 
     return this.http.get<any>(this.baseUrl + currentWeatherForecastUrl + locationKey, {params});
-    // return of({
-    //   "LocalObservationDateTime": "2020-08-02T17:51:00+01:00",
-    //   "EpochTime": 1596387060,
-    //   "WeatherText": "Mostly cloudy",
-    //   "WeatherIcon": 6,
-    //   "HasPrecipitation": false,
-    //   "PrecipitationType": null,
-    //   "IsDayTime": true,
-    //   "Temperature": {
-    //     "Metric": {
-    //       "Value": 23.6,
-    //       "Unit": "C",
-    //       "UnitType": 17
-    //     },
-    //     "Imperial": {
-    //       "Value": 74,
-    //       "Unit": "F",
-    //       "UnitType": 18
-    //     }
-    //   },
-    //   "MobileLink": "http://m.accuweather.com/en/gb/london/ec4a-2/current-weather/328328?lang=en-us",
-    //   "Link": "http://www.accuweather.com/en/gb/london/ec4a-2/current-weather/328328?lang=en-us"
-    // });
   }
 
   getFiveDaysForecast(locationKey: any): Observable<any> {

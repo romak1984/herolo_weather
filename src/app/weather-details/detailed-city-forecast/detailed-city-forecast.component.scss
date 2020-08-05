@@ -4,7 +4,7 @@
   margin-right: 50px;
   display: grid;
   grid-template-columns: repeat(5, 1fr);
-  grid-template-rows: auto 300px auto;
+  grid-template-rows: auto 200px auto;
   gap: 20px;
 
   justify-items: center;
@@ -17,6 +17,15 @@
     grid-row-start: 1;
     grid-row-end: 2;
 
+    .temperature{
+      text-align: center;
+      font-size: 40px;
+    }
+
+    .main-weather-icon{
+      width: 200px;
+    }
+
   }
 
   .favorite{
@@ -24,6 +33,16 @@
     grid-column-end: 6;
     grid-row-start: 1;
     grid-row-end: 2;
+
+    .fav-cont{
+      display: flex;
+      align-content: center;
+    }
+
+
+    .fav-icon{
+      color: red;
+    }
   }
 
   .description{

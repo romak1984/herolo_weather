@@ -1,27 +1,29 @@
 <div class="detailed-city-forecast">
-  <ng-container *ngIf="currentWeather$ | async as currentWeather">
+  <ng-container *ngIf="{currentLocation: currentLocation$ | async, currentWeather: currentWeather$ | async} as data">
     <div class="icon-city-temp">
-      <img src="assets/icons/{{currentWeather[0].WeatherIcon}}-s.png" alt="">
+      <img class="main-weather-icon" *ngIf="data.currentWeather" src="assets/icons/{{data.currentWeather[0].WeatherIcon}}-s.png" alt="">
 
-      <div class="temperature">
-        {{currentWeather[0].Temperature.Metric.Value}} {{currentWeather[0].Temperature.Metric.Unit}}
+      <div class="temperature" *ngIf="data.currentWeather">
+        {{data.currentWeather[0].Temperature.Metric.Value}} {{data.currentWeather[0].Temperature.Metric.Unit}}
       </div>
     </div>
 
-    <div class="favorite">
+    <div class="favorite" *ngIf="data.currentLocation">
       <ng-container *ngIf="{isFavorite: isCurrentLocationFavorite$ | async} as isFaveObj">
-        <button *ngIf="!isFaveObj.isFavorite" (click)="addToFavorites()">Add to favorites</button>
-        <button *ngIf="isFaveObj.isFavorite" (click)="removeFromFavorites()">Remove from favorites</button>
+        <button mat-button color="primary" *ngIf="!isFaveObj.isFavorite" (click)="addToFavorites(data.currentLocation)">Add to favorites</button>
+        <div *ngIf="isFaveObj.isFavorite" class="fav-cont"><fa class="fav-icon" size="5x"  name="heart" animation="spin"></fa><button mat-button color="primary" (click)="removeFromFavorites(data.currentLocation)">Remove from favorites</button></div>
       </ng-container>
 
     </div>
 
-    <div class="description">
-        {{currentWeather[0].WeatherText}}
+    <div class="description" *ngIf="data.currentWeather">
+        {{data.currentWeather[0].WeatherText}}
     </div>
 
     <div class="forecast">
-      <app-weather-card *ngFor="let dayForecast of (fiveDaysForecast$ | async).DailyForecasts;" [dayForecast]="dayForecast"></app-weather-card>
+      <ng-container *ngIf="fiveDaysForecast$ | async as fiveDaysForecast">
+        <app-weather-card *ngFor="let dayForecast of fiveDaysForecast.DailyForecasts;" [dayForecast]="dayForecast"></app-weather-card>
+      </ng-container>
     </div>
   </ng-container>
 

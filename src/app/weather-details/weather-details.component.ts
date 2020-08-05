@@ -16,8 +16,6 @@ export class WeatherDetailsComponent implements OnInit {
   constructor(private weatherService: WeatherService) { }
 
   ngOnInit() {
-    this.currentLocation$ = this.weatherService.getCurrenLocation();
-
     // this.selectedLocation = {
     //   "Version": 1,
     //   "Key": "328328",

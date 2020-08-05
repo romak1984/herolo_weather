@@ -1,9 +1,6 @@
 <app-city-search (search)="locationSelected($event)"></app-city-search>
-<ng-container *ngIf="currentLocation$ | async as currentLocation">
-  <app-detailed-city-forecast [location]="currentLocation"
-  (add)="addToFavorites($event)"
+<app-detailed-city-forecast (add)="addToFavorites($event)"
   (remove)="removeFromFavorites($event)">
 </app-detailed-city-forecast>
-</ng-container>
 
 

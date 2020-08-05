@@ -1,12 +1,11 @@
-<form class="example-form" (ngSubmit)="onSearch(searchControl.value)">
-  <mat-form-field class="example-full-width">
+<form class="search-form" #searchForm (ngSubmit)="onSearch(searchControl.value)">
+  <mat-form-field>
     <input type="text"
-         placeholder="Pick one"
+         placeholder="Choose city"
          aria-label="Number"
          matInput
          [formControl]="searchControl"
          [matAutocomplete]="auto">
-
     <mat-autocomplete #auto="matAutocomplete"
     [displayWith]="displayFn">
       <mat-option *ngFor="let option of filteredOptions | async" [value]="option">

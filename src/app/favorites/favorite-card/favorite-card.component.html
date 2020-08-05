@@ -1,8 +1,11 @@
 <div class="favorite-card" (click)="selectFavorite()">
   <ng-container *ngIf="currentWeather$ | async as currentWeather">
     <div class="city-name">{{favoriteLoc.LocalizedName}}</div>
-    <div class="temperature">{{currentWeather.Temperature.Metric.Value + currentWeather.Temperature.Metric.Unit}}</div>
-    <div class="desciption">{{currentWeather.WeatherText}}</div>
-    <img src="assets/icons/{{currentWeather.WeatherIcon}}-s.png">
+    <div class="temperature">
+      <span>{{currentWeather[0].Temperature.Metric.Value}}</span>
+      <span>{{currentWeather[0].Temperature.Metric.Unit}}</span>
+    </div>
+    <div class="desciption">{{currentWeather[0].WeatherText}}</div>
+    <img src="assets/icons/{{currentWeather[0].WeatherIcon}}-s.png">
   </ng-container>
 </div>
